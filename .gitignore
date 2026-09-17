@@ -1,1 +1,17 @@
-.ipynb_checkpoints/ 
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+.env
+
+# Generated analysis outputs
+outputs/metrics/
+outputs/predictions/
+data/*.db

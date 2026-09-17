@@ -1,220 +1,173 @@
-<div align="center">
+# Customer Churn Analysis
 
-# 📊 Customer Churn Analysis
-### A Data-Driven Framework for Predicting and Preventing Customer Attrition
+An end-to-end customer churn analysis that moves from raw CSV data to SQL
+business analysis, leakage-safe modeling, cost-sensitive review thresholds,
+and an interactive Streamlit decision-support tool.
 
-![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-Data%20Wrangling-150458?logo=pandas&logoColor=white)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-Machine%20Learning-F7931E?logo=scikitlearn&logoColor=white)
-![Seaborn](https://img.shields.io/badge/Seaborn-Visualization-4C72B0?logo=plotly&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626?logo=jupyter&logoColor=white)
-![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?logo=powerbi&logoColor=black)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
-![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
+I built this project around a question a retention team could actually use:
+**which customers look most at risk of leaving, and who should be reviewed
+first?** I did not want to choose a model because it had the best accuracy.
+Churn is an imbalanced problem, and the cost of missing a likely churner can
+be different from the cost of contacting someone who would have stayed.
 
-*An end-to-end analytics project: from raw data to a deployed predictive model and business strategy.*
+## What the project includes
 
-</div>
+- Raw-data quality profiling and schema checks
+- Cleaning and reproducible feature preparation
+- SQLite analytics database with reusable views
+- SQL churn and retention queries
+- Logistic Regression and Random Forest baselines
+- Stratified holdout evaluation and five-fold cross-validation
+- ROC-AUC, PR-AUC, calibration, precision, recall, and F1
+- Cost-sensitive outreach threshold scenarios
+- Streamlit customer-risk review dashboard
+- Automated tests and GitHub Actions
+- Architecture, data dictionary, model card, and responsible-use notes
 
----
+## Project story
 
-## 📑 Table of Contents
+The first issue I found was `TotalCharges`. It looks numeric, but the source
+file stores it as text and leaves it blank for some new customers. I convert
+it to a number and treat those blanks as zero because a new customer has not
+accumulated charges yet. I also remove `customerID` before modeling because it
+identifies a row rather than describing customer behavior.
 
-- [Problem Statement](#-problem-statement)
-- [Executive Summary](#-executive-summary)
-- [Dataset](#-dataset)
-- [Methodology](#-methodology)
-- [Key Findings](#-key-findings)
-- [Predictive Modeling](#-predictive-modeling)
-- [Business Recommendations](#-business-recommendations)
-- [Visuals](#-visuals)
-- [Tech Stack](#️-tech-stack)
-- [Project Structure](#-project-structure)
-- [How to Run](#️-how-to-run)
-- [Limitations & Future Work](#-limitations--future-work)
-- [About the Author](#-about-the-author)
+The original notebook is still included because it shows the exploratory path
+and the reasoning behind the first version of the project. The reusable
+`src/churn_analysis` package is the more reliable path: it can be tested,
+executed from the command line, and used by the dashboard.
 
----
+## Architecture
 
-## 🎯 Problem Statement
-
-Customer acquisition costs 5–25x more than retention, yet most businesses only react to churn
-*after* a customer has already left. This project reframes churn as a problem that can be
-anticipated, not just measured — using historical customer data to identify **who is at risk,
-why, and what intervention is likely to work.**
-
-**Business question:** *Which customers are most likely to churn, and what can the company do
-to retain them before they leave?*
-
----
-
-## 📌 Executive Summary
-
-| | |
-|---|---|
-| 🔑 **Primary Driver** | Contract type is the single strongest predictor of churn — month-to-month customers churn at **15x** the rate of two-year contract holders |
-| ⏳ **Highest-Risk Window** | Customer attrition is heavily concentrated in the **first 3 months** of the relationship |
-| 🤖 **Model Deployed** | Class-weighted Random Forest — **65.4% recall**, correctly flagging 2 in 3 customers who will actually churn |
-| 💰 **Actionable Impact** | Of 373 churners in the holdout test set, the model surfaces **244** for proactive retention outreach |
-| ✅ **Strategic Response** | Five prioritized, data-backed recommendations — see [Business Recommendations](#-business-recommendations) |
-
----
-
-## 📊 Dataset
-
-**Source:** [Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn) (IBM sample dataset, via Kaggle)
-**Scope:** 7,043 customers · 21 raw features · Binary target (`Churn`: Yes/No)
-**Feature categories:** Demographics, account tenure & billing, subscribed services, contract terms
-
----
-
-## 🔬 Methodology
-
-This project follows a structured, six-stage analytical workflow:
-
-1. **Data Cleaning** — Resolved a latent type error in `TotalCharges` (stored as text due to
-   blank values in new-customer records), removed non-predictive identifiers, and validated
-   data integrity (nulls, duplicates).
-2. **Exploratory Data Analysis** — Investigated churn behavior across contract type, tenure,
-   pricing, and service type to surface primary drivers.
-3. **Risk Segmentation** — Built a rule-based scoring system (informed directly by EDA
-   findings) to bucket customers into High / Medium / Low churn-risk tiers, validated against
-   actual churn outcomes.
-4. **Predictive Modeling** — Trained and benchmarked Logistic Regression against Random
-   Forest (default and class-weighted variants), selecting the final model based on business
-   cost of false negatives, not accuracy alone.
-5. **Business Translation** — Converted statistical findings into prioritized, actionable
-   retention strategies.
-6. **Dashboarding** — Exported model outputs into Power BI for stakeholder-facing,
-   self-serve exploration.
-
----
-
-## 🔑 Key Findings
-
-| # | Finding | Evidence |
-|---|---|---|
-| 1 | **Contract type is the dominant churn driver** | Month-to-month: 42.7% churn · One-year: 11.3% · Two-year: 2.8% |
-| 2 | **Churn risk is front-loaded** | Attrition is concentrated in tenure 0–3 months, dropping sharply thereafter |
-| 3 | **Premium pricing does not guarantee loyalty** | Fiber optic customers churn 2x+ more than DSL customers despite paying a premium |
-| 4 | **Add-on services correlate with retention** | Customers with Online Security / Tech Support churn less — likely reflecting deeper product engagement |
-| 5 | **Segmentation is statistically validated** | High-risk segment: 51.7% actual churn vs. 3.6% for Low-risk — a 14x separation |
-
----
-
-## 🤖 Predictive Modeling
-
-Three model configurations were trained and evaluated on an identical, held-out 20% test
-set to ensure a fair comparison.
-
-| Model | Accuracy | Precision | Recall | F1 |
-|---|---|---|---|---|
-| Logistic Regression | 82.2% | 68.7% | 60.1% | 64.1% |
-| Random Forest (default) | 78.5% | 63.7% | 43.7% | 51.8% |
-| **Random Forest (`class_weight='balanced'`)** ✅ | 78.9% | 59.2% | **65.4%** | 62.2% |
-
-**Model selection rationale:** Accuracy is a misleading metric here — the dataset is
-imbalanced (~73% retained / 27% churned), so a naive model could score ~73% accuracy while
-catching zero churners. **Recall was prioritized** as the deciding metric, since the cost of
-a missed churner (lost customer, lost revenue) materially outweighs the cost of a false
-positive (an unnecessary retention offer). The class-weighted Random Forest was selected as
-the production model on this basis.
-
-**Top predictive features** (via Logistic Regression coefficients) independently validated
-the EDA findings: `Contract_Two year` and `InternetService_Fiber optic` emerged as the two
-strongest signals in the model — confirming that manual analysis and machine learning
-converged on the same conclusions.
-
----
-
-## 💡 Business Recommendations
-
-| Priority | Recommendation | Rationale |
-|---|---|---|
-| 1 | Incentivize conversion from month-to-month to annual contracts | Strongest single lever; 15x churn differential |
-| 2 | Implement structured onboarding touchpoints at day 30 / day 60 | Churn is concentrated in the first 3 months |
-| 3 | Audit the Fiber optic customer experience (pricing, reliability, support) | 2x+ churn despite premium pricing signals a value gap |
-| 4 | Bundle Online Security / Tech Support into new month-to-month plans | Correlated with materially lower churn |
-| 5 | Operationalize the churn model as a monthly scoring pipeline | Shifts retention from reactive to proactive |
-
----
-
-## 📈 Visuals
-
-<p align="center">
-  <img src="outputs/churn_by_contract.png" width="420">
-  <img src="outputs/churn_by_tenure.png" width="420">
-</p>
-<p align="center">
-  <img src="outputs/risk_segment_scatter.png" width="420">
-  <img src="outputs/feature_importance.png" width="420">
-</p>
-
-An interactive Power BI dashboard extending these visuals is available in [`/dashboard`](./dashboard) *(link/screenshot to be added)*.
-
----
-
-## 🛠️ Tech Stack
-
-| Category | Tools |
-|---|---|
-| Language | Python 3.x |
-| Data Wrangling | Pandas, NumPy |
-| Visualization | Matplotlib, Seaborn |
-| Machine Learning | Scikit-learn (Logistic Regression, Random Forest) |
-| Dashboarding | Power BI |
-| Environment | Jupyter Notebook |
-
----
-
-## 📂 Project Structure
-
-```
-customer-churn-analysis/
-├── data/
-│   ├── WA_Fn-UseC_-Telco-Customer-Churn.csv      # Raw dataset
-│   └── telco_churn_with_segments.csv             # Cleaned dataset with risk segments (Power BI source)
-├── notebooks/
-│   └── customer-churn-analysis.ipynb             # Full analysis: cleaning → EDA → modeling
-├── outputs/
-│   ├── churn_by_contract.png
-│   ├── churn_by_tenure.png
-│   ├── risk_segment_scatter.png
-│   └── feature_importance.png
-├── requirements.txt
-└── README.md
+```text
+raw CSV
+  -> quality profile
+  -> cleaning
+  -> SQLite analytics views
+  -> leakage-safe preprocessing
+  -> model evaluation
+  -> cost scenarios
+  -> human review dashboard
 ```
 
----
+More detail is in [`docs/architecture.md`](docs/architecture.md).
 
-## ▶️ How to Run
+## Results
+
+The current baseline pipeline reports metrics from a stratified holdout split
+and five-fold cross-validation. Run the pipeline to generate the exact report
+for the current code and data:
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/Nilesh-builds/customer-churn-analysis.git
-cd customer-churn-analysis
+python -m pip install -r requirements.txt
+python -m pip install -e .
+python -m churn_analysis.pipeline
+```
 
-# 2. Install dependencies
-pip install -r requirements.txt
+The command writes:
 
-# 3. Launch the notebook
+- `outputs/metrics/model_metrics.json`
+- `data/churn_analysis.db`
+
+The generated files are intentionally ignored by Git because they can be
+recreated from the source dataset.
+
+The balanced Random Forest is retained as a useful baseline because it finds
+more churners than the unweighted Random Forest in the holdout evaluation.
+That does not automatically make it the right production model. The dashboard
+lets the reviewer change contact and missed-churn costs instead of hiding those
+assumptions inside a hard-coded threshold.
+
+## Run the dashboard
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+The dashboard contains:
+
+- Contract-level churn overview
+- Cross-validated model metrics
+- Cost-sensitive threshold scenarios
+- A ranked customer review list
+- CSV download for the review list
+- Data-quality report
+
+The dashboard is decision support. It does not automatically contact,
+penalize, cancel, or reject customers.
+
+## Run the notebook
+
+```bash
 jupyter notebook notebooks/customer-churn-analysis.ipynb
 ```
 
----
+## Run tests
 
-## 🔭 Limitations & Future Work
+```bash
+python -m pytest
+```
 
-- **Class imbalance** (~27% churn) constrains precision when optimizing for recall; techniques such as SMOTE or threshold tuning could be explored to improve the precision-recall trade-off.
-- **Static snapshot data** — the model reflects a single point in time; a production deployment would require periodic retraining as customer behavior shifts.
-- **No causal inference** — findings (e.g., Fiber optic churn, billing method correlation) are associative, not causal; qualitative research (support tickets, surveys) would strengthen root-cause conclusions.
-- **Next iteration:** incorporate customer lifetime value (CLV) into risk scoring, so retention spend can be prioritized by *both* churn probability and revenue impact.
+## Repository structure
 
----
+```text
+customer-churn-analysis/
+├── app/
+│   └── streamlit_app.py
+├── data/
+│   ├── WA_Fn-UseC_-Telco-Customer-Churn.csv
+│   └── telco_churn_with_segments.csv
+├── docs/
+│   ├── architecture.md
+│   ├── data-dictionary.md
+│   └── model-card.md
+├── notebooks/
+│   └── customer-churn-analysis.ipynb
+├── outputs/
+│   ├── churn_by_contract.png
+│   ├── churn_by_tenure.png
+│   ├── feature_importance.png
+│   └── risk_segment_scatter.png
+├── sql/
+│   ├── analytics.sql
+│   └── schema.sql
+├── src/churn_analysis/
+│   ├── data.py
+│   ├── database.py
+│   ├── modeling.py
+│   └── pipeline.py
+├── tests/
+├── pyproject.toml
+└── requirements.txt
+```
 
-## 🙋 About the Author
+## Limitations and responsible use
 
-**Nilesh** — Data Science undergraduate (BCA, Data Science specialization) building
-end-to-end analytics projects as part of a Data Analyst job search.
+- The source data is a static IBM sample, not a live customer feed.
+- There is no timestamp, so temporal drift and future-data validation cannot
+  be measured honestly.
+- Observed relationships are correlations, not causal explanations.
+- Cost values in the dashboard are scenarios, not measured company costs.
+- A real deployment would need intervention experiments, governance, privacy
+  review, and monitoring by customer segment.
+- The model should create a review queue, not make an automatic customer
+  decision.
 
-📫 [LinkedIn](https://www.linkedin.com/in/nilesh-singh-b9b6932bb) · 💻 [GitHub](https://github.com/Nilesh-builds) · ✉️ [Email](kumarnilash509@gmail.com)
+The full intended use and limitations are documented in
+[`docs/model-card.md`](docs/model-card.md).
+
+## Source and license
+
+The data is the IBM Telco Customer Churn sample dataset distributed through
+Kaggle. Check the dataset terms before redistributing it. Code in this
+repository is available under the MIT License.
+
+## About me
+
+I am Nilesh Singh, a BCA Data Science student building toward Data Analyst and
+AI Trainer roles. I am interested in the part of analytics that happens after
+the model: checking whether the result is trustworthy, explaining it clearly,
+and turning it into a decision someone can act on.
+
+- [LinkedIn](https://www.linkedin.com/in/nilesh-singh-b9b6932bb)
+- [GitHub](https://github.com/Nilesh-builds)
