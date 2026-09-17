@@ -36,7 +36,9 @@ def get_profile() -> dict:
 
 @st.cache_data
 def get_cross_validation() -> dict:
-    return cross_validate_models(load_clean_data())
+    # Community Cloud has a small memory budget, so the dashboard uses three
+    # sequential folds. The full five-fold report remains in the CLI pipeline.
+    return cross_validate_models(load_clean_data(), folds=3, n_jobs=1)
 
 
 @st.cache_resource

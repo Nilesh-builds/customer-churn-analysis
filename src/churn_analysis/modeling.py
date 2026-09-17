@@ -115,7 +115,10 @@ def train_models(
 
 
 def cross_validate_models(
-    frame: pd.DataFrame, folds: int = 5, random_state: int = 42
+    frame: pd.DataFrame,
+    folds: int = 5,
+    random_state: int = 42,
+    n_jobs: int = 1,
 ) -> dict[str, dict[str, float]]:
     """Estimate model stability across stratified folds."""
     features = frame.drop(columns=["Churn"])
@@ -137,7 +140,7 @@ def cross_validate_models(
             target,
             cv=splitter,
             scoring=scoring,
-            n_jobs=-1,
+            n_jobs=n_jobs,
         )
         results[name] = {
             metric: round(float(scores[f"test_{metric}"].mean()), 4)
