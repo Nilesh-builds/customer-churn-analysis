@@ -4,6 +4,8 @@ An end-to-end customer churn analysis that moves from raw CSV data to SQL
 business analysis, leakage-safe modeling, cost-sensitive review thresholds,
 and an interactive Streamlit decision-support tool.
 
+**Live demo:** [Customer Churn Decision Support](https://nilesh-customer-churn.streamlit.app/)
+
 I built this project around a question a retention team could actually use:
 **which customers look most at risk of leaving, and who should be reviewed
 first?** I did not want to choose a model because it had the best accuracy.
@@ -69,8 +71,9 @@ The command writes:
 - `outputs/metrics/model_metrics.json`
 - `data/churn_analysis.db`
 
-The generated files are intentionally ignored by Git because they can be
-recreated from the source dataset.
+The SQLite database is generated locally and ignored by Git. The metrics JSON
+is committed as a small, reviewable evaluation snapshot so the hosted demo can
+show verified results without consuming its limited startup resources.
 
 The balanced Random Forest is retained as a useful baseline because it finds
 more churners than the unweighted Random Forest in the holdout evaluation.

@@ -1,5 +1,6 @@
 """A transparent decision-support dashboard for the churn analysis."""
 
+import json
 from pathlib import Path
 
 import pandas as pd
@@ -16,6 +17,7 @@ from churn_analysis.modeling import (
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "WA_Fn-UseC_-Telco-Customer-Churn.csv"
+REPORT_PATH = ROOT / "outputs" / "metrics" / "model_metrics.json"
 
 st.set_page_config(page_title="Customer Churn Decision Support", layout="wide")
 
@@ -37,6 +39,9 @@ def get_profile() -> dict:
 
 @st.cache_data
 def get_cross_validation() -> dict:
+    if REPORT_PATH.exists():
+        report = json.loads(REPORT_PATH.read_text(encoding="utf-8"))
+        return report["cross_validation"]
     # Community Cloud has a small memory budget, so the dashboard uses three
     # sequential folds. The full five-fold report remains in the CLI pipeline.
     return cross_validate_models(load_clean_data(), folds=3, n_jobs=1)

@@ -32,7 +32,8 @@ the dashboard.
 ## Reproducibility
 
 The command-line pipeline records data-quality results, holdout metrics,
-cross-validation averages, and threshold assumptions in
-`outputs/metrics/model_metrics.json`. It also creates a local SQLite database
-with reusable views. Generated artifacts are ignored by Git and can be rebuilt
-from the source CSV.
+cross-validation averages, calibration bins, and threshold assumptions in
+`outputs/metrics/model_metrics.json`. The verified metrics snapshot is kept in
+Git so the hosted dashboard does not need to retrain during startup. It also
+creates a local SQLite database with reusable views; that database is ignored
+by Git and can be rebuilt from the source CSV.

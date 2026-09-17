@@ -12,6 +12,5 @@ htmlcov/
 .env
 
 # Generated analysis outputs
-outputs/metrics/
 outputs/predictions/
 data/*.db
