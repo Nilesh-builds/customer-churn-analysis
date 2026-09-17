@@ -99,6 +99,13 @@ The dashboard contains:
 The dashboard is decision support. It does not automatically contact,
 penalize, cancel, or reject customers.
 
+### Dashboard preview
+
+![Customer churn dashboard overview](docs/screenshots/overview.png)
+
+The live demo contains additional model-quality, customer-risk, and data-quality
+views.
+
 ## Run the notebook
 
 ```bash
