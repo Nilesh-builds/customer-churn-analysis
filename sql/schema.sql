@@ -1,0 +1,26 @@
+-- The Python loader creates this table from the cleaned dataframe so its
+-- column types stay aligned with the source file.
+-- This file documents the analytical columns used by the SQL layer.
+
+-- customers(
+--   gender TEXT,
+--   SeniorCitizen INTEGER,
+--   Partner TEXT,
+--   Dependents TEXT,
+--   tenure INTEGER,
+--   PhoneService TEXT,
+--   MultipleLines TEXT,
+--   InternetService TEXT,
+--   OnlineSecurity TEXT,
+--   OnlineBackup TEXT,
+--   DeviceProtection TEXT,
+--   TechSupport TEXT,
+--   StreamingTV TEXT,
+--   StreamingMovies TEXT,
+--   Contract TEXT,
+--   PaperlessBilling TEXT,
+--   PaymentMethod TEXT,
+--   MonthlyCharges REAL,
+--   TotalCharges REAL,
+--   Churn INTEGER
+-- );
