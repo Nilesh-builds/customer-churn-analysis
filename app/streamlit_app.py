@@ -11,6 +11,7 @@ from churn_analysis.modeling import (
     fit_full_model,
     holdout_predictions,
     threshold_report,
+    train_models,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,6 +40,11 @@ def get_cross_validation() -> dict:
     # Community Cloud has a small memory budget, so the dashboard uses three
     # sequential folds. The full five-fold report remains in the CLI pipeline.
     return cross_validate_models(load_clean_data(), folds=3, n_jobs=1)
+
+
+@st.cache_data
+def get_holdout_metrics() -> dict:
+    return train_models(load_clean_data())[1]
 
 
 @st.cache_resource
@@ -89,8 +95,20 @@ with tab_overview:
 
 with tab_model:
     st.subheader("Cross-validated model quality")
-    cv_frame = pd.DataFrame(get_cross_validation()).T
-    st.dataframe(cv_frame, use_container_width=True)
+    try:
+        cv_frame = pd.DataFrame(get_cross_validation()).T
+        st.dataframe(cv_frame, use_container_width=True)
+    except Exception:
+        # The hosted runtime can have stricter limits than local Python. The
+        # dashboard should remain useful while the full report stays in CI.
+        st.warning(
+            "Cross-validation is unavailable in this hosted session. "
+            "Showing the verified holdout comparison instead."
+        )
+        st.dataframe(
+            pd.DataFrame(get_holdout_metrics()).T,
+            use_container_width=True,
+        )
 
     st.subheader("Retention threshold scenarios")
     contact_cost = st.number_input("Contact cost", min_value=0.0, value=5.0, step=1.0)
