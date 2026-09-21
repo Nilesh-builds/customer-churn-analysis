@@ -1,10 +1,12 @@
-# Customer Churn Analysis
+﻿# Customer Churn Analysis
 
 An end-to-end customer churn analysis that moves from raw CSV data to SQL
 business analysis, leakage-safe modeling, cost-sensitive review thresholds,
 and an interactive Streamlit decision-support tool.
 
 **Live demo:** [Customer Churn Decision Support](https://nilesh-customer-churn.streamlit.app/)
+
+![Customer Churn Decision Support dashboard](assets/dashboard.png)
 
 I built this project around a question a retention team could actually use:
 **which customers look most at risk of leaving, and who should be reviewed
@@ -122,33 +124,33 @@ python -m pytest
 
 ```text
 customer-churn-analysis/
-├── app/
-│   └── streamlit_app.py
-├── data/
-│   ├── WA_Fn-UseC_-Telco-Customer-Churn.csv
-│   └── telco_churn_with_segments.csv
-├── docs/
-│   ├── architecture.md
-│   ├── data-dictionary.md
-│   └── model-card.md
-├── notebooks/
-│   └── customer-churn-analysis.ipynb
-├── outputs/
-│   ├── churn_by_contract.png
-│   ├── churn_by_tenure.png
-│   ├── feature_importance.png
-│   └── risk_segment_scatter.png
-├── sql/
-│   ├── analytics.sql
-│   └── schema.sql
-├── src/churn_analysis/
-│   ├── data.py
-│   ├── database.py
-│   ├── modeling.py
-│   └── pipeline.py
-├── tests/
-├── pyproject.toml
-└── requirements.txt
+â”œâ”€â”€ app/
+â”‚   â””â”€â”€ streamlit_app.py
+â”œâ”€â”€ data/
+â”‚   â”œâ”€â”€ WA_Fn-UseC_-Telco-Customer-Churn.csv
+â”‚   â””â”€â”€ telco_churn_with_segments.csv
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ architecture.md
+â”‚   â”œâ”€â”€ data-dictionary.md
+â”‚   â””â”€â”€ model-card.md
+â”œâ”€â”€ notebooks/
+â”‚   â””â”€â”€ customer-churn-analysis.ipynb
+â”œâ”€â”€ outputs/
+â”‚   â”œâ”€â”€ churn_by_contract.png
+â”‚   â”œâ”€â”€ churn_by_tenure.png
+â”‚   â”œâ”€â”€ feature_importance.png
+â”‚   â””â”€â”€ risk_segment_scatter.png
+â”œâ”€â”€ sql/
+â”‚   â”œâ”€â”€ analytics.sql
+â”‚   â””â”€â”€ schema.sql
+â”œâ”€â”€ src/churn_analysis/
+â”‚   â”œâ”€â”€ data.py
+â”‚   â”œâ”€â”€ database.py
+â”‚   â”œâ”€â”€ modeling.py
+â”‚   â””â”€â”€ pipeline.py
+â”œâ”€â”€ tests/
+â”œâ”€â”€ pyproject.toml
+â””â”€â”€ requirements.txt
 ```
 
 ## Limitations and responsible use
