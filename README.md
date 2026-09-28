@@ -1,5 +1,9 @@
 # Customer Churn Analysis
 
+[![Tests](https://github.com/Nilesh-builds/customer-churn-analysis/actions/workflows/tests.yml/badge.svg)](https://github.com/Nilesh-builds/customer-churn-analysis/actions/workflows/tests.yml)
+
+> Balanced Random Forest ROC-AUC 0.82 on 7,043 Telco customers; cost scenario at threshold 0.05 catches 366/374 churners (97.9% recall) for $6,410. Source: `outputs/metrics/model_metrics.json`.
+
 An end-to-end customer churn analysis that moves from raw CSV data to SQL
 business analysis, leakage-safe modeling, cost-sensitive review thresholds,
 and an interactive Streamlit decision-support tool.
@@ -57,6 +61,18 @@ raw CSV
 More detail is in [`docs/architecture.md`](docs/architecture.md).
 
 ## Results
+
+Source: `outputs/metrics/model_metrics.json` (regenerate with `python -m churn_analysis.pipeline`). Dataset: 7,043 rows, IBM Telco sample.
+
+| Model (holdout) | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
+|---|---:|---:|---:|---:|---:|---:|
+| Logistic Regression | 0.806 | 0.657 | 0.559 | 0.604 | 0.842 | 0.634 |
+| Random Forest | 0.786 | 0.625 | 0.487 | 0.547 | 0.819 | 0.611 |
+| Balanced Random Forest | 0.770 | 0.559 | 0.631 | 0.593 | 0.821 | 0.603 |
+
+5-fold CV ROC-AUC: logistic 0.845, balanced RF 0.822, RF 0.819 — close to holdout, so the ranking is stable across folds.
+
+Cost scenario (contact $5, missed churn $100 — adjustable assumptions, not measured costs): lowest-cost threshold **0.05** contacts 1,122 customers, catches **366 of 374 churners** (recall 0.979, precision 0.326) for **$6,410**. Calibration bins ship in the same JSON.
 
 The current baseline pipeline reports metrics from a stratified holdout split
 and five-fold cross-validation. Run the pipeline to generate the exact report
