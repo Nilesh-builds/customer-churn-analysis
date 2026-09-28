@@ -63,10 +63,7 @@ The project is deployed as an interactive **Streamlit** app, so you can explore 
 > [!TIP]
 > Free Streamlit apps go to sleep when nobody has used them for a while. If you see a "wake up" button, click it and give it a few seconds.
 
-<!--
-  ADD AN APP SCREENSHOT OR GIF HERE, for example saved as outputs/app-demo.gif:
-  <div align="center"><img src="outputs/app-demo.gif" alt="Streamlit app demo" width="90%"/></div>
--->
+<div align="center"><img src="outputs/app-demo.png" alt="Streamlit app demo" width="90%"/></div>
 
 <img src="assets/divider.svg" width="100%" height="4" alt=""/>
 
@@ -294,10 +291,7 @@ A missed churner costs far more than a wasted offer, so **recall was the decidin
 
 > 📊 **Power BI dashboard:** built from `data/telco_churn_with_segments.csv`, which holds the cleaned data plus each customer's risk segment.
 
-<!--
-  ADD YOUR DASHBOARD SCREENSHOT HERE once you save it, for example as outputs/dashboard.png:
-  <div align="center"><img src="outputs/dashboard.png" alt="Power BI dashboard" width="90%"/></div>
--->
+<div align="center"><img src="outputs/dashboard.png" alt="Dashboard screenshot (Streamlit app view, temporary until Power BI export)" width="90%"/></div>
 
 <img src="assets/divider.svg" width="100%" height="4" alt=""/>
 
