@@ -63,8 +63,6 @@ The project is deployed as an interactive **Streamlit** app, so you can explore 
 > [!TIP]
 > Free Streamlit apps go to sleep when nobody has used them for a while. If you see a "wake up" button, click it and give it a few seconds.
 
-<div align="center"><img src="outputs/app-demo.png" alt="Streamlit app demo" width="90%"/></div>
-
 <img src="assets/divider.svg" width="100%" height="4" alt=""/>
 
 ## 🎯 The Problem
