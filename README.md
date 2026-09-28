@@ -289,10 +289,6 @@ A missed churner costs far more than a wasted offer, so **recall was the decidin
 
 </div>
 
-> 📊 **Power BI dashboard:** built from `data/telco_churn_with_segments.csv`, which holds the cleaned data plus each customer's risk segment.
-
-<div align="center"><img src="outputs/dashboard.png" alt="Dashboard screenshot (Streamlit app view, temporary until Power BI export)" width="90%"/></div>
-
 <img src="assets/divider.svg" width="100%" height="4" alt=""/>
 
 ## 🧰 Tech Stack
